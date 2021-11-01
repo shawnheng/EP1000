@@ -1,0 +1,21 @@
+<html>
+<head>
+      <title> About Me </title>
+</head>
+<body>
+      <h1> About</h1>
+      <div>
+          <p> Navigation:</p>
+          <ul>
+              <li><a.href="index.html">Main</a></li>
+              <li>Projects</li>
+              <li><a.href="about.html">About</a></li>
+          </ul>
+       </div>
+       <table>
+       <ul>
+       <img src="html1.jpg" alt =" CAT" style = " width:48px;height:48px;">
+       </ul>
+          <table> 
+         <h2> Interest </h2>
+</html>
