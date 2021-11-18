@@ -25,24 +25,13 @@ h1,h2,h3{
    padding: 10px;
 }
 
-
 #content {
     padding: 10px;
 } 
-#nav{
-    width: 180px;
-    float:left; 
-}
-#nav ul{
-    list-style-type: none;
-    padding: 0;
-}
-#nav.selected{
-    font-weight: bold;
-}
+
 #main {
     width: 800px;
-    float:right;
+    float:center;
 } 
 #footer {
     clear:both;
