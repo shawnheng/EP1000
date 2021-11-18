@@ -33,6 +33,7 @@ h1,h2,h3{
 #main {
   width: 800px;
   float:center;
+  text-align:center;
 } 
 #footer {
   clear:both;
