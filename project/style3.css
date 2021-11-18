@@ -31,9 +31,9 @@ h1,h2,h3{
 } 
 
 #main {
-  width: 1000px;
-  float:right;
-  margin-left: auto;
+  width: 800px;
+  float:center;
+
 } 
 #footer {
   clear:both;
