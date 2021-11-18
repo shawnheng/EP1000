@@ -30,8 +30,8 @@ h1,h2,h3{
   padding: 10px;
 } 
 #main {
-  width: 1000px;
-  float:left;
+  width: 800px;
+  float:center;
 } 
 #footer {
   clear:both;
