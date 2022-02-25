@@ -98,7 +98,201 @@
                 </tr>
               </table>
               
-           </div>
+              <h7>Ideation</h7>
+              <p>My project idea was to create a MEARM (robot arm). Which allow it to pick and place objects and rotate around.</p>
+              
+              <p>For MEARM, I use a template from thingiverse to cut robot arm parts and later assemble them with M3 screws.</p>
+              
+              <img src="thing.jpeg" alt ="MEARM template on thingiverse" style = " width:500px;height:250px;"> 
+              <a href="https://www.thingiverse.com/thing:360108">MEARM File</a>
+              <p>Once I download the template. I proceed on to laser cutter. For the MEARM, what materials to use for laser cutting. you can choose either plywood or acrylic. For me, I am going to cutter out using plywood.</p>
+              <img src="laserme.jpeg" alt ="lasering cutting MEARM template" style = " width:500px;height:250px;"> 
+               
+              <p>Once I cut all the template of MEARM parts, I proceed to assemble everything.</p>
+              <a href="https://www.instructables.com/Pocket-Sized-Robot-Arm-meArm-V04/">MEARM assembly</a>
+
+              <p>I use this website to follow step by step on assembling the parts together.</p>
+
+              <h8>3D Modelling</h8>
+              <P>I create simple casing to house the arduino nano and wires. To make it neat and tidy. I create a joystick handle as the joystick handle itself was missing. Both the casing and joystick handle were 3D printer I </P>
+              <iframe src="https://myhub.autodesk360.com/ue2c0d808/shares/public/SH9285eQTcf875d3c539d16b643a6e80eb31?mode=embed" width="640" height="480" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"  frameborder="0"></iframe>
+              
+              <iframe src="https://myhub.autodesk360.com/ue2c0d808/shares/public/SH9285eQTcf875d3c539e930a4d5db8cc171?mode=embed" width="640" height="480" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"  frameborder="0"></iframe>
+              
+              <iframe src="https://myhub.autodesk360.com/ue2c0d808/shares/public/SH9285eQTcf875d3c5394ec99ca4ba8d8871?mode=embed" width="640" height="480" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"  frameborder="0"></iframe>
+           
+              <img src="casing3d.jpeg" alt ="casing printing on prusa printer" style = " width:500px;height:250px;">
+               
+              <img src="joy3d.jpeg" alt ="Joystick handle printing on Mbot printer" style = " width:500px;height:250px;"> 
+              
+              <h9>Programming</h9> 
+               
+              <p>This is my connection for my servo motors and joysticks to my arduino Nano.</p>
+
+              <img src="circuit.jpeg" alt ="Connection for servo motors and joysticks" style = " width:500px;height:250px;"> 
+
+              <p>I programme arduino nano using arduino IDE</p> 
+
+              <p>
+                #include <Servo.h>
+
+                  //######### Pin Assignments ###########
+                  
+                  //Servo Pins
+                  int servo1Pin = 2;
+                  int servo2Pin = 3;
+                  int servo3Pin = 4;
+                  int servo4Pin = 5; 
+                  
+                  //JoyStick Pins
+                  int joy1XPin = A0;
+                  int joy1YPin = A1;
+                  int joy2XPin = A2;
+                  int joy2YPin = A3; 
+                  
+                  //Servo Names
+                  Servo servo1 ;
+                  Servo servo2 ;
+                  Servo servo3 ;
+                  Servo servo4 ; 
+                  
+                  // Joystick Center deadband range, must be higher and lower than Joystick Zeroed Values
+                  int centerDeadbandHigh = 650;
+                  int centerDeadbandLow = 350;
+                  
+                  //Servo update delay, lower value = faster servo movement
+                  int servoUpdateDelay = 10; 
+                  
+                  //Set to true to Enable Serial Out of Joystick Analog Values for Debuging
+                  bool debugPrint = false; 
+                  
+                  void setup(){ 
+                  
+                  //setup serial port
+                    Serial.begin(9600);
+                    Serial.println("Analog Joy Stick Arm Control");// debug message
+                  
+                  //assign signal pins to servos
+                    servo1.attach( servo1Pin);
+                    servo2.attach( servo2Pin );
+                    servo3.attach( servo3Pin);
+                    servo4.attach( servo4Pin );
+                  
+                   //
+                    servo1.write(90);
+                    servo2.write(90);
+                    servo3.write(90);
+                    servo4.write(90); 
+                  
+                  }
+                  
+                  void loop(){
+                  
+                    //joySetServoPos(1,s1,3,2,s2,2);// Joystick1: Format = Joystick X Pot(analog pin, servo, servo ID),Joystick Y Pot(analog pin, servo, servo ID)
+                  
+                    //
+                    joySetServoPos(joy1XPin,servo1,1,joy1YPin,servo2,2);
+                    joySetServoPos(joy2XPin,servo3,3,joy2YPin,servo4,4); 
+                  
+                  } 
+                  
+                  // CUSTOM FUNCTIONS 
+                  
+                  void joySetServoPos(int joyXPin, Servo servoX, int servoXID, int joyYPin, Servo servoY, int servoYID){
+                   int xVal = analogRead(joyXPin);
+                   int yVal = analogRead(joyYPin); 
+                  
+                   // debug joy pot values
+                      if (debugPrint == true){
+                          Serial.print("Joy X Value= ");
+                       Serial.println(xVal);
+                       Serial.print("Joy Y Value= ");
+                       Serial.println(yVal);
+                  
+                      } 
+                  
+                   //Skip servo pos update and Delay if both joy pots are centered
+                   if(xVal > centerDeadbandLow && xVal < centerDeadbandHigh) {
+                    if(yVal > centerDeadbandLow && yVal < centerDeadbandHigh){
+                             // debug
+                             if (debugPrint == true){
+                       Serial.println("Joy X Zeroed");
+                             Serial.println("Joy Y Zeroed");
+                             }
+                  
+                       goto skipServoUpdate;
+                  
+                    }
+                  
+                   }
+                  
+                   //inc or dec servo position depending on joystick pot positions
+                   if (xVal > centerDeadbandHigh){
+                    servoX.write(servoX.read()+1);
+                  
+                    //Send servo pos and servo ID to external program
+                          if (debugPrint == true){
+                    Serial.print(servoX.read());
+                    Serial.print("S");
+                    Serial.println(servoXID);
+                          }
+                  
+                   }
+                  
+                   if (xVal < centerDeadbandLow){
+                    servoX.write(servoX.read()-1);
+                    //Send servo pos and servo ID to external program
+                          if (debugPrint == true){
+                    Serial.print(servoX.read());
+                    Serial.print("S");
+                    Serial.println(servoXID);
+                  
+                          }
+                  
+                   }
+                  
+                   if (yVal > centerDeadbandHigh){
+                    servoY.write(servoY.read()+1);
+                  
+                    //Send servo pos and servo ID to external program
+                          if (debugPrint == true){
+                    Serial.print(servoY.read());
+                    Serial.print("S");
+                    Serial.println(servoYID);
+                  
+                          }
+                  
+                   }
+                  
+                   if (yVal < centerDeadbandLow){
+                    servoY.write(servoY.read()-1);
+                  
+                    //Send servo pos and servo ID to external program
+                          if (debugPrint == true){
+                    Serial.print(servoY.read());
+                    Serial.print("S");
+                    Serial.println(servoYID);
+                  
+                          }
+                  
+                   } 
+                  
+                   delay(servoUpdateDelay);
+                   skipServoUpdate:;
+                  
+                  }
+              </p>
+              
+              <p>This is how the final product looks like but I think personally for MEARM can be improved and modify.</p>
+              
+              <iframe width="420" height="315"
+                 src="https://www.youtube.com/embed/b83cJhJl_Jw?controls=1">
+              </iframe>  
+
+
+              
+               
+            </div>
                 
         </div>
         <div id="footer"> 
